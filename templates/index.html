@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-container">
+    <div class="hero-text">
+        <h1>LE LEGGENDE<br><span class="red-text">NON FINISCONO MAI</span></h1>
+        <p>I piloti che hanno scritto la storia.<br>Le auto che hanno fatto sognare generazioni.<br>Benvenuto su <strong>Motorsport Hub</strong>.</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('piloti') }}" class="btn-hero-red">PILOTI LEGENDARI <span>›</span></a>
+            <a href="{{ url_for('auto') }}" class="btn-hero-outline">AUTO ICONICHE <span>›</span></a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="{{ url_for('static', filename='img/hero-bg.png') }}" alt="McLaren F1 Legend">
+    </div>
+</div>
+
+<div class="intro-section">
+    <span class="subtitle">SCOPRI LA STORIA</span>
+    <div class="separator">
+        <span class="line"></span>
+        <h2>DUE MONDI. UN'UNICA PASSIONE.</h2>
+        <span class="line"></span>
+    </div>
+    <p>Esplora le vite straordinarie dei piloti che hanno sfidato i propri limiti e le auto che hanno rivoluzionato la Formula 1.</p>
+</div>
+
+<div class="home-cards-container">
+    <div class="home-macro-card">
+        <div class="macro-card-img text-bw">
+            <img src="{{ url_for('static', filename='img/piloti-home.png') }}" alt="Piloti Storici">
+        </div>
+        <div class="macro-card-body">
+            <div class="card-title-icon">
+                <span class="icon">🏎️</span>
+                <h3>PILOTI LEGENDARI</h3>
+            </div>
+            <p>Coraggio, talento, determinazione. Scopri le storie dei più grandi campioni che hanno reso immortale la Formula 1.</p>
+            <a href="{{ url_for('piloti') }}" class="btn-link-more">SCOPRI DI PIÙ <span>›</span></a>
+        </div>
+    </div>
+
+    <div class="home-macro-card">
+        <div class="macro-card-img">
+            <img src="{{ url_for('static', filename='img/auto-home.png') }}" alt="Ferrari F1 Vintage">
+        </div>
+        <div class="macro-card-body">
+            <div class="card-title-icon">
+                <span class="icon">🚗</span>
+                <h3>AUTO ICONICHE</h3>
+            </div>
+            <p>Design rivoluzionario, innovazione e velocità senza tempo. Le auto che hanno lasciato il segno nella storia.</p>
+            <a href="{{ url_for('auto') }}" class="btn-link-more">SCOPRI DI PIÙ <span>›</span></a>
+        </div>
+    </div>
+</div>
+
+<div class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-icon">🏁</span>
+        <div class="stat-texts">
+            <h3>75+</h3>
+            <p>ANNI DI STORIA DELLA F1</p>
+        </div>
+    </div>
+    <div class="stat-item">
+        <span class="stat-icon">🏆</span>
+        <div class="stat-texts">
+            <h3>100+</h3>
+            <p>PILOTI LEGENDARI</p>
+        </div>
+    </div>
+    <div class="stat-item">
+        <span class="stat-icon">🏎️</span>
+        <div class="stat-texts">
+            <h3>200+</h3>
+            <p>AUTO ICONICHE</p>
+        </div>
+    </div>
+    <div class="stat-item">
+        <span class="stat-icon">🌍</span>
+        <div class="stat-texts">
+            <h3>500+</h3>
+            <p>GARE MEMORABILI</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
