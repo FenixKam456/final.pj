@@ -9,12 +9,15 @@
         display: flex;
         flex-direction: column;
         position: relative;
-        transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
+                    background-color 0.35s ease, 
+                    border-color 0.35s ease, 
+                    box-shadow 0.35s ease;
     }
     
     .driver-card:hover {
         background-color: #242424;
-        border-color: #ff1a1a !important;
+        border-color: #e50914 !important;
         transform: translateY(-6px);
         box-shadow: 0 12px 25px rgba(229, 9, 20, 0.3);
     }
@@ -35,6 +38,7 @@
     .driver-card:hover .driver-card-img {
         transform: scale(1.08);
     }
+
     .card-title {
         margin: 0 0 15px 0;
         font-size: 24px;
@@ -43,10 +47,22 @@
         transition: all 0.3s ease;
     }
     .driver-card:hover .card-title {
-        color: #ff1a1a;
+        color: #ffffff;
         font-style: italic;
-        text-shadow: 0 0 10px rgba(255, 26, 26, 0.9), 0 0 20px rgba(255, 26, 26, 0.4);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.5);
         transform: translateX(5px);
+    }
+
+    .card-divider {
+        border: 0;
+        height: 1px;
+        background: #333;
+        margin: 15px 0;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .driver-card:hover .card-divider {
+        background: #e50914;
+        box-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
     }
 </style>
 
@@ -57,8 +73,9 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
         {% for pilota in piloti %}
         <div class="driver-card">
+            
             {% if current_user.is_authenticated and current_user.username == 'admin' %}
-            <a href="{{ url_for('elimina_pilota', id=pilota.id) }}" onclick="return confirm('Eliminare questo pilota?');" style="position: absolute; top: 10px; right: 10px; background: rgba(229, 9, 20, 0.8); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; z-index: 10;">&times;</a>
+            <a href="{{ url_for('elimina_pilota', id=pilota.id) }}" onclick="return confirm('Vuoi davvero eliminare questo pilota?');" style="position: absolute; top: 10px; right: 10px; background: rgba(229, 9, 20, 0.8); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; z-index: 10;">&times;</a>
             {% endif %}
 
             <div class="img-container">
@@ -73,11 +90,15 @@
 
                 <h3 class="card-title">{{ pilota.nome }}</h3>
                 
+                <hr class="card-divider">
+                
                 <p style="margin: 0; font-size: 14px; color: #ccc; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">
                     {{ pilota.biografia }}
                 </p>
             </div>
         </div>
+        {% else %}
+        <p style="font-style: italic; color: #aaa; grid-column: 1 / -1;">Nessun pilota inserito nel database.</p>
         {% endfor %}
     </div>
 </div>
