@@ -1,16 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    /* Stile personalizzato per i pulsanti dei filtri con effetto hover */
+    .filter-btn {
+        background-color: #333 !important;
+        color: #fff !important;
+        border: 1px solid #444 !important;
+        transition: all 0.3s ease;
+    }
+    .filter-btn:hover {
+        background-color: #e50914 !important;
+        color: #fff !important;
+        border-color: #e50914 !important;
+        box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+    }
+    .filter-btn.active {
+        background-color: #e50914 !important;
+        color: #fff !important;
+        border-color: #e50914 !important;
+    }
+</style>
+
 <div class="container mt-4" style="font-family: sans-serif; color: #fff;">
     <h2 style="color: #e50914; text-transform: uppercase; margin-bottom: 5px;">🏎️ Il Garage delle Auto Iconiche</h2>
     <p style="color: #aaa; margin-bottom: 25px;">Scopri le specifiche tecniche delle vetture più straordinarie di sempre.</p>
 
     <div style="background: #1a1a1a; padding: 15px; border-radius: 6px; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
         <span style="font-weight: bold;">Filtra per Categoria:</span>
-        <a href="{{ url_for('auto') }}" class="btn {{ 'btn-danger' if not categoria_attiva else 'btn-outline-light' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Tutte</a>
-        <a href="{{ url_for('auto', categoria='Formula 1') }}" class="btn {{ 'btn-danger' if categoria_attiva == 'Formula 1' else 'btn-outline-light' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Formula 1</a>
-        <a href="{{ url_for('auto', categoria='Rally') }}" class="btn {{ 'btn-danger' if categoria_attiva == 'Rally' else 'btn-outline-light' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Rally</a>
-        <a href="{{ url_for('auto', categoria='Supercar') }}" class="btn {{ 'btn-danger' if categoria_attiva == 'Supercar' else 'btn-outline-light' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Supercar</a>
-        <a href="{{ url_for('auto', categoria='Endurance') }}" class="btn {{ 'btn-danger' if categoria_attiva == 'Endurance' else 'btn-outline-light' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Endurance</a>
+        <a href="{{ url_for('auto') }}" class="btn filter-btn {{ 'active' if not categoria_attiva else '' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Tutte</a>
+        <a href="{{ url_for('auto', categoria='Formula 1') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Formula 1' else '' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Formula 1</a>
+        <a href="{{ url_for('auto', categoria='Rally') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Rally' else '' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Rally</a>
+        <a href="{{ url_for('auto', categoria='Supercar') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Supercar' else '' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Supercar</a>
+        <a href="{{ url_for('auto', categoria='Endurance') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Endurance' else '' }}" style="border-radius: 4px; padding: 5px 15px; font-weight: bold; text-decoration: none;">Endurance</a>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
