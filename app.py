@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
@@ -17,20 +16,9 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configurazione precisa per il caricamento delle immagini
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'img')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-
-# Forza la creazione della cartella nel caso non esistesse
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # --- MODELLI DEL DATABASE ---
 class User(db.Model, UserMixin):
@@ -44,7 +32,7 @@ class Pilota(db.Model):
     scuderia = db.Column(db.String(100))
     titoli = db.Column(db.Integer, default=0)
     biografia = db.Column(db.Text)
-    immagine = db.Column(db.String(200), default='default_pilota.png')
+    immagine = db.Column(db.String(500), default='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7') # URL di fallback di esempio
 
 class Auto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,7 +41,7 @@ class Auto(db.Model):
     anno = db.Column(db.Integer)
     categoria = db.Column(db.String(50), default='Formula 1')
     descrizione = db.Column(db.Text)
-    immagine = db.Column(db.String(200), default='default_auto.png')
+    immagine = db.Column(db.String(500), default='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7') # URL di fallback di esempio
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -104,19 +92,17 @@ def aggiungi_pilota():
     if current_user.username != 'admin':
         abort(403)
     if request.method == 'POST':
-        nome_immagine = 'default_pilota.png'
-        file = request.files.get('immagine_file')
-        if file and file.filename != '' and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            nome_immagine = filename
+        # Prendiamo direttamente l'URL dal campo di testo del form HTML
+        immagine_url = request.form.get('immagine_url')
+        if not immagine_url:
+            immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
 
         nuovo = Pilota(
             nome=request.form.get('nome'),
             scuderia=request.form.get('scuderia'),
             titoli=int(request.form.get('titoli', 0)),
             biografia=request.form.get('biografia'),
-            immagine=nome_immagine
+            immagine=immagine_url
         )
         db.session.add(nuovo)
         db.session.commit()
@@ -129,12 +115,10 @@ def aggiungi_auto():
     if current_user.username != 'admin':
         abort(403)
     if request.method == 'POST':
-        nome_immagine = 'default_auto.png'
-        file = request.files.get('immagine_file')
-        if file and file.filename != '' and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            nome_immagine = filename
+        # Prendiamo direttamente l'URL dal campo di testo del form HTML
+        immagine_url = request.form.get('immagine_url')
+        if not immagine_url:
+            immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
 
         nuova = Auto(
             modello=request.form.get('modello'),
@@ -142,7 +126,7 @@ def aggiungi_auto():
             anno=int(request.form.get('anno', 2026)),
             categoria=request.form.get('categoria'),
             descrizione=request.form.get('descrizione'),
-            immagine=nome_immagine
+            immagine=immagine_url
         )
         db.session.add(nuova)
         db.session.commit()
