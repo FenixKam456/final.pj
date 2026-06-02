@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 40px auto; padding: 30px; background: #1a1a1a; border-radius: 8px; border-top: 4px solid #e50914; color: #fff; font-family: sans-serif;">
+    <h2 style="color: #e50914; margin-bottom: 20px; text-transform: uppercase;">Aggiungi Nuova Vettura</h2>
+    
+    <form method="POST" action="{{ url_for('aggiungi_auto') }}" enctype="multipart/form-data">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Modello Auto *</label>
+            <input type="text" name="modello" required style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Costruttore / Marca</label>
+            <input type="text" name="costruttore" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Anno di Produzione</label>
+            <input type="number" name="anno" value="2026" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoria Competizione</label>
+            <select name="categoria" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+                <option value="Formula 1">Formula 1</option>
+                <option value="Rally">Rally</option>
+                <option value="Supercar">Supercar</option>
+                <option value="Endurance">Endurance</option>
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Seleziona Immagine Vettura dal PC (.png, .jpg, .webp)</label>
+            <input type="file" name="immagine_file" accept="image/*" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Descrizione / Scheda Tecnica</label>
+            <textarea name="descrizione" rows="5" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; resize: vertical;"></textarea>
+        </div>
+        
+        <button type="submit" style="background: #e50914; color: #fff; border: none; padding: 12px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; width: 100%;">Salva Vettura</button>
+    </form>
+</div>
+{% endblock %}

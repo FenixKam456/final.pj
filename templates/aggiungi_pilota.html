@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 40px auto; padding: 30px; background: #1a1a1a; border-radius: 8px; border-top: 4px solid #e50914; color: #fff; font-family: sans-serif;">
+    <h2 style="color: #e50914; margin-bottom: 20px; text-transform: uppercase;">Aggiungi Nuovo Pilota</h2>
+    
+    <form method="POST" action="{{ url_for('aggiungi_pilota') }}" enctype="multipart/form-data">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Nome e Cognome *</label>
+            <input type="text" name="nome" required style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Scuderia</label>
+            <input type="text" name="scuderia" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Titoli Mondiali</label>
+            <input type="number" name="titoli" value="0" min="0" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Carica Foto dal PC</label>
+            <input type="file" name="immagine_file" accept="image/*" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Biografia</label>
+            <textarea name="biografia" rows="5" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; resize: vertical;"></textarea>
+        </div>
+        <button type="submit" style="background: #e50914; color: #fff; border: none; padding: 12px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; width: 100%;">Salva Pilota</button>
+    </form>
+</div>
+{% endblock %}

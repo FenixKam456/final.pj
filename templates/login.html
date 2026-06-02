@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-section" style="max-width: 400px; margin: 60px auto;">
+    <h2>🔐 Accesso Amministratore</h2>
+    <p style="color: #aaa; margin-bottom: 20px;">Inserisci la password master per sbloccare le funzioni di inserimento ed eliminazione.</p>
+    
+    {% if errore %}
+        <p style="color: #ff4444; font-weight: bold; margin-bottom: 15px;">{{ errore }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('login') }}" method="POST">
+        <div class="form-group">
+            <label for="password">Password Amministratore:</label>
+            <input type="password" id="password" name="password" class="form-control" required placeholder="Inserisci la password...">
+        </div>
+        <button type="submit" class="btn-submit">Accedi ed Attiva Pannello</button>
+    </form>
+</div>
+{% endblock %}

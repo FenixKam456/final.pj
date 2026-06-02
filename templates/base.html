@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motorsport Hub</title>
+    <style>
+        html, body { background-color: #0b0b0b !important; color: #ffffff !important; margin: 0; padding: 0; }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">
+            <a href="{{ url_for('index') }}">🏁 MOTORSPORT<span>HUB</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('piloti') }}">PILOTI LEGENDARI</a></li>
+            <li><a href="{{ url_for('auto') }}">AUTO ICONICHE</a></li>
+            
+            {% if current_user.is_authenticated and current_user.username == 'admin' %}
+                <li><a href="{{ url_for('aggiungi_pilota') }}" style="color: #e10600; font-weight: bold;">+ PILOTA</a></li>
+                <li><a href="{{ url_for('aggiungi_auto') }}" style="color: #e10600; font-weight: bold;">+ AUTO</a></li>
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" style="color: #ff4444 !important;">LOGOUT ({{ current_user.username|upper }})</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}">LOGIN</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>🏁 Archivio Piloti Leggendari</h1>
+<p style="color: #aaa; margin-bottom: 30px;">La Hall of Fame dei più grandi campioni automobilistici, ordinati per titoli mondiali.</p>
+
+<div class="cards-grid">
+    {% for pilota in piloti %}
+    <div class="card">
+        {% if current_user.is_authenticated and current_user.username == 'admin' %}
+            <a href="{{ url_for('elimina_pilota', id=pilota.id) }}" class="btn-delete" title="Elimina Pilota" onclick="return confirm('Vuoi davvero eliminare questo pilota?');">×</a>
+        {% endif %}
+        
+        <div class="card-img-container">
+            {% if pilota.immagine %}
+                <img src="{{ url_for('static', filename='img/' + pilota.immagine) }}" alt="{{ pilota.nome }}">
+            {% else %}
+                <div class="no-img-placeholder">🏎️</div>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            <span class="badge">{{ pilota.scuderia }}</span>
+            <h3 style="margin: 10px 0 5px 0; font-style: normal; font-size: 22px;">{{ pilota.nome }}</h3>
+            
+            <ul class="info-list">
+                <li><strong>Titoli Mondiali:</strong> <span style="color: #e10600; font-weight: bold;">{{ pilota.titoli }}</span></li>
+                {% if pilota.biografia %}
+                <li style="color: #bbb; font-size: 14px; line-height: 1.4;">{{ pilota.biografia }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    {% else %}
+    <p style="color: #aaa; font-style: italic;">Nessun pilota salvato nel database.</p>
+    {% endfor %}
+</div>
+{% endblock %}
