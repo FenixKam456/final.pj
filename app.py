@@ -3,23 +3,36 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 import os
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SUPER_CLEAN_KEY_2026_FINAL'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///motorsport.db'
+
+# --- CONFIGURAZIONE DATABASE DINAMICA PER VERCEL ---
+if os.environ.get('POSTGRES_URL'):
+    # Se siamo online su Vercel, usa Postgres e correggi il prefisso del protocollo per SQLAlchemy
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL').replace("postgres://", "postgresql://", 1)
+else:
+    # Se sei sul tuo computer in locale, continua a usare SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///motorsport.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 # Configurazione precisa per il caricamento delle immagini
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'img')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
 # Forza la creazione della cartella nel caso non esistesse
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+# --- MODELLI DEL DATABASE ---
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -32,6 +45,7 @@ class Pilota(db.Model):
     titoli = db.Column(db.Integer, default=0)
     biografia = db.Column(db.Text)
     immagine = db.Column(db.String(200), default='default_pilota.png')
+
 class Auto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     modello = db.Column(db.String(100), nullable=False)
@@ -40,11 +54,14 @@ class Auto(db.Model):
     categoria = db.Column(db.String(50), default='Formula 1')
     descrizione = db.Column(db.Text)
     immagine = db.Column(db.String(200), default='default_auto.png')
+
 @login_manager.user_loader
 def load_user(user_id):
     if str(user_id) == '9999':
         return User(id=9999, username='admin')
     return User.query.get(int(user_id))
+
+# --- ROTTE DELL'APPLICAZIONE ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -52,6 +69,7 @@ def index():
 @app.route('/piloti')
 def piloti():
     return render_template('piloti.html', piloti=Pilota.query.all())
+
 @app.route('/auto')
 def auto():
     categoria_selezionata = request.args.get('categoria')
@@ -91,7 +109,7 @@ def aggiungi_pilota():
         if file and file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            nome_immagine = filename  # Salva solo il nome puro del file
+            nome_immagine = filename
 
         nuovo = Pilota(
             nome=request.form.get('nome'),
@@ -116,7 +134,7 @@ def aggiungi_auto():
         if file and file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            nome_immagine = filename  # Salva solo il nome puro del file
+            nome_immagine = filename
 
         nuova = Auto(
             modello=request.form.get('modello'),
@@ -130,6 +148,7 @@ def aggiungi_auto():
         db.session.commit()
         return redirect(url_for('auto'))
     return render_template('aggiungi_auto.html')
+
 @app.route('/elimina-pilota/<int:id>')
 @login_required
 def elimina_pilota(id):
@@ -149,7 +168,10 @@ def elimina_auto(id):
     db.session.delete(vettura)
     db.session.commit()
     return redirect(url_for('auto'))
+
+# --- CREAZIONE TABELLE AUTOMATICA ALL'AVVIO ---
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
