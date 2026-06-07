@@ -10,21 +10,23 @@
             linear-gradient(-45deg, transparent 75%, #111 75%) !important;
         background-size: 8px 8px !important;
         background-position: 0 0, 0 4px, 4px -4px, -4px 0 !important;
+        color: #fff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .detail-container {
-        max-width: 1100px;
-        margin: 50px auto;
+        max-width: 1200px;
+        margin: 40px auto;
         padding: 0 20px;
-        font-family: sans-serif;
     }
 
+    /* Bottone Torna al Garage */
     .back-btn {
-        background: linear-gradient(180deg, #444 0%, #292929 100%);
-        color: #ddd !important;
-        border: 1px solid #555;
-        border-radius: 20px;
-        padding: 8px 20px;
+        background: #222;
+        color: #aaa !important;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 8px 16px;
         font-weight: bold;
         text-transform: uppercase;
         font-size: 12px;
@@ -32,161 +34,349 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        transition: all 0.25s ease;
+        transition: all 0.2s ease;
         margin-bottom: 25px;
     }
 
     .back-btn:hover {
-        background: linear-gradient(180deg, #555 0%, #333 100%);
+        background: #333;
         color: #fff !important;
-        border-color: #888;
-        transform: translateX(-3px);
+        border-color: #666;
     }
 
-    .detail-wrapper {
-        background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
-        border-radius: 24px;
-        border: 2px solid #3a3a3a;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.1);
-        overflow: hidden;
+    /* Sezione Superiore: Immagine a Sinistra, Titolo/Badge a Destra */
+    .upper-section {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.4fr 1fr;
         gap: 30px;
-        padding: 25px;
+        margin-bottom: 30px;
     }
 
-    @media (max-width: 768px) {
-        .detail-wrapper {
+    @media (max-width: 850px) {
+        .upper-section {
             grid-template-columns: 1fr;
         }
     }
 
-    .detail-img-container {
-        border-radius: 18px;
-        border: 2px solid #2a2a2a;
+    .main-image-container {
+        background: #111;
+        border-radius: 20px;
+        border: 1px solid #2a2a2a;
         overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        height: 100%;
-        min-height: 300px;
+        height: 400px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    .detail-img {
+    .main-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: block;
     }
 
-    .detail-title {
+    .main-info-box {
+        background: #151515;
+        border-radius: 20px;
+        border: 1px solid #2a2a2a;
+        padding: 35px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .brand-title {
         font-family: 'Arial Black', sans-serif;
-        font-size: 36px;
+        font-size: 42px;
         font-weight: 900;
         text-transform: uppercase;
         font-style: italic;
-        color: #fff;
-        margin-top: 0;
-        margin-bottom: 15px;
+        margin: 0 0 20px 0;
         letter-spacing: -1px;
-        text-shadow: 0 0 15px rgba(255,255,255,0.2);
     }
 
-    .tech-badge {
+    .badge-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .badge-manufacturer {
         background: #e50914;
+        color: white;
         font-size: 11px;
         font-weight: 900;
-        padding: 5px 12px;
-        border-radius: 4px;
+        padding: 6px 14px;
+        border-radius: 6px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        display: inline-block;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
-    .category-badge {
+    .badge-category {
         background: #2b2b2b;
         border: 1px solid #444;
+        color: #aaa;
         font-size: 11px;
         font-weight: bold;
-        padding: 4px 11px;
-        border-radius: 4px;
-        color: #aaa;
-        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 6px;
+        text-transform: uppercase;
     }
 
-    .info-box {
-        background: rgba(0,0,0,0.4);
-        border: 1px solid #222;
-        padding: 15px;
-        border-radius: 12px;
-        margin-top: 20px;
-    }
-
-    .info-row {
+    /* Righe di riepilogo rapido */
+    .quick-row {
         display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
         border-bottom: 1px solid #222;
-        font-size: 15px;
     }
 
-    .info-row:last-child {
+    .quick-row:last-child {
         border-bottom: none;
     }
 
-    .info-label {
+    .quick-icon {
+        color: #e50914;
+        font-size: 18px;
+        width: 24px;
+        text-align: center;
+    }
+
+    .quick-label {
         color: #888;
+        font-size: 13px;
+        text-transform: uppercase;
         font-weight: bold;
+        width: 140px;
     }
 
-    .info-value {
-        color: #fff;
+    .quick-value {
         font-weight: bold;
-    }
-
-    .description-text {
-        color: #ccc;
-        line-height: 1.7;
         font-size: 15px;
-        margin-top: 20px;
+    }
+
+    /* Sezione Inferiore: Griglia Scheda Tecnica vs Storia */
+    .lower-section {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    @media (max-width: 850px) {
+        .lower-section {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .panel-box {
+        background: #151515;
+        border-radius: 20px;
+        border: 1px solid #2a2a2a;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .panel-title {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 800;
+        color: #fff;
+        margin-top: 0;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #2a2a2a;
+        padding-bottom: 10px;
+    }
+
+    /* Tabella interna delle specifiche */
+    .spec-table {
+        width: 100%;
+    }
+
+    .spec-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #222;
+        font-size: 14px;
+    }
+
+    .spec-row:last-child {
+        border-bottom: none;
+    }
+
+    .spec-label-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #888;
+    }
+
+    .spec-value {
+        font-weight: 600;
+        color: #fff;
+    }
+
+    /* Testo Storia */
+    .story-text {
+        color: #ccc;
+        font-size: 15px;
+        line-height: 1.7;
         text-align: justify;
         white-space: pre-wrap;
+        margin: 0;
+    }
+
+    /* Banner Riepilogativo in fondo (Ibrida, Cavalli, ecc.) */
+    .footer-stats-banner {
+        background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+        border: 1px solid #2a2a2a;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-icon-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(229, 9, 20, 0.1);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #e50914;
+        font-size: 18px;
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-number {
+        font-size: 18px;
+        font-weight: 800;
+        color: #fff;
+    }
+
+    .stat-desc {
+        font-size: 11px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 0.5px;
     }
 </style>
 
 <div class="detail-container">
     <a href="{{ url_for('auto') }}" class="back-btn">⬅️ Torna al Garage</a>
 
-    <div class="detail-wrapper">
-        <div class="detail-img-container">
-            <img src="{{ auto.immagine }}" alt="{{ auto.modello }}" class="detail-img">
+    <div class="upper-section">
+        <div class="main-image-container">
+            <img src="{{ auto.immagine }}" alt="{{ auto.modello }}" class="main-image">
         </div>
 
-        <div style="display: flex; flex-direction: column; justify-content: center;">
-            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-                <span class="tech-badge">{{ auto.costruttore or 'N/D' }}</span>
-                <span class="category-badge">{{ auto.categoria }}</span>
+        <div class="main-info-box">
+            <h1 class="brand-title">{{ auto.modello }}</h1>
+            
+            <div class="badge-row">
+                <span class="badge-manufacturer">{{ auto.costruttore or 'N/D' }}</span>
+                <span class="badge-category">{{ auto.categoria }}</span>
             </div>
 
-            <h1 class="detail-title">{{ auto.modello }}</h1>
+            <div class="quick-row">
+                <span class="quick-icon">🏭</span>
+                <span class="quick-label">Costruttore</span>
+                <span class="quick-value" style="color: #e50914;">{{ auto.costruttore or 'N/D' }}</span>
+            </div>
+            <div class="quick-row">
+                <span class="quick-icon">🏁</span>
+                <span class="quick-label">Categoria</span>
+                <span class="quick-value">{{ auto.categoria }}</span>
+            </div>
+            <div class="quick-row">
+                <span class="quick-icon">📅</span>
+                <span class="quick-label">Anno di Lancio</span>
+                <span class="quick-value" style="color: #ff333a;">{{ auto.anno }}</span>
+            </div>
+        </div>
+    </div>
 
-            <div class="info-box">
-                <div class="info-row">
-                    <span class="info-label">Costruttore:</span>
-                    <span class="info-value" style="color: #e50914;">{{ auto.costruttore or 'N/D' }}</span>
+    <div class="lower-section">
+        <div class="panel-box">
+            <h2 class="panel-title">Scheda Tecnica</h2>
+            <div class="spec-table">
+                <div class="spec-row">
+                    <div class="spec-label-group">🏎️ <span>Tipo</span></div>
+                    <div class="spec-value">{{ auto.categoria }}</div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Categoria:</span>
-                    <span class="info-value">{{ auto.categoria }}</span>
+                <div class="spec-row">
+                    <div class="spec-label-group">⚙️ <span>Motore</span></div>
+                    <div class="spec-value">Propulsione Avanzata</div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Anno di Lancio:</span>
-                    <span class="info-value" style="color: #ff333a;">{{ auto.anno }}</span>
+                <div class="spec-row">
+                    <div class="spec-label-group">⚡ <span>Trazione</span></div>
+                    <div class="spec-value">Posteriore / Integrale</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-label-group">🏋️ <span>Omologazione</span></div>
+                    <div class="spec-value">FIA Track Ready</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-label-group">🌱 <span>Carburante</span></div>
+                    <div class="spec-value">Sostenibile / Performance</div>
                 </div>
             </div>
+        </div>
 
-            <h3 style="color: #fff; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 25px; margin-bottom: 10px; border-left: 3px solid #e50914; padding-left: 8px;">Scheda Tecnica & Storia</h3>
-            <p class="description-text">{{ auto.descrizione }}</p>
+        <div class="panel-box">
+            <h2 class="panel-title">Storia</h2>
+            <p class="story-text">{{ auto.descrizione }}</p>
+        </div>
+    </div>
+
+    <div class="footer-stats-banner">
+        <div class="stat-item">
+            <div class="stat-icon-circle">⏱️</div>
+            <div class="stat-info">
+                <span class="stat-number">TRACK</span>
+                <span class="stat-desc">Assetto</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon-circle">⚖️</div>
+            <div class="stat-info">
+                <span class="stat-number">~1000 KG</span>
+                <span class="stat-desc">Peso Stimato</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon-circle">⚡</div>
+            <div class="stat-info">
+                <span class="stat-number">HYBRID / GAS</span>
+                <span class="stat-desc">Tecnologia</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon-circle">🏆</div>
+            <div class="stat-info">
+                <span class="stat-number">ICONIC</span>
+                <span class="stat-desc">Status</span>
+            </div>
         </div>
     </div>
 </div>
