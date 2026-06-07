@@ -20,7 +20,6 @@
         padding: 0 20px;
     }
 
-    /* Bottone Torna al Garage */
     .back-btn {
         background: #222;
         color: #aaa !important;
@@ -44,7 +43,6 @@
         border-color: #666;
     }
 
-    /* Sezione Superiore: Immagine a Sinistra, Titolo/Badge a Destra */
     .upper-section {
         display: grid;
         grid-template-columns: 1.4fr 1fr;
@@ -122,7 +120,6 @@
         text-transform: uppercase;
     }
 
-    /* Righe di riepilogo rapido */
     .quick-row {
         display: flex;
         align-items: center;
@@ -155,18 +152,8 @@
         font-size: 15px;
     }
 
-    /* Sezione Inferiore: Griglia Scheda Tecnica vs Storia */
     .lower-section {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 30px;
         margin-bottom: 30px;
-    }
-
-    @media (max-width: 850px) {
-        .lower-section {
-            grid-template-columns: 1fr;
-        }
     }
 
     .panel-box {
@@ -189,37 +176,6 @@
         padding-bottom: 10px;
     }
 
-    /* Tabella interna delle specifiche */
-    .spec-table {
-        width: 100%;
-    }
-
-    .spec-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid #222;
-        font-size: 14px;
-    }
-
-    .spec-row:last-child {
-        border-bottom: none;
-    }
-
-    .spec-label-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #888;
-    }
-
-    .spec-value {
-        font-weight: 600;
-        color: #fff;
-    }
-
-    /* Testo Storia */
     .story-text {
         color: #ccc;
         font-size: 15px;
@@ -229,7 +185,29 @@
         margin: 0;
     }
 
-    /* Banner Riepilogativo in fondo (Ibrida, Cavalli, ecc.) */
+    .admin-edit-panel {
+        background: rgba(229, 9, 20, 0.05);
+        border: 1px dashed #e50914;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .admin-input {
+        background: #222;
+        border: 1px solid #444;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        width: 100%;
+    }
+
+    .admin-input:focus {
+        border-color: #e50914;
+        outline: none;
+    }
+
     .footer-stats-banner {
         background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
         border: 1px solid #2a2a2a;
@@ -282,6 +260,12 @@
     }
 </style>
 
+{% set pure_story = auto.descrizione %}
+{% if "===TECH_DATA===" in auto.descrizione %}
+    {% set parts = auto.descrizione.split("===TECH_DATA===") %}
+    {% set pure_story = parts[0] %}
+{% endif %}
+
 <div class="detail-container">
     <a href="{{ url_for('auto') }}" class="back-btn">⬅️ Torna al Garage</a>
 
@@ -318,34 +302,28 @@
 
     <div class="lower-section">
         <div class="panel-box">
-            <h2 class="panel-title">Scheda Tecnica</h2>
-            <div class="spec-table">
-                <div class="spec-row">
-                    <div class="spec-label-group">🏎️ <span>Tipo</span></div>
-                    <div class="spec-value">{{ auto.categoria }}</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-label-group">⚙️ <span>Motore</span></div>
-                    <div class="spec-value">Propulsione Avanzata</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-label-group">⚡ <span>Trazione</span></div>
-                    <div class="spec-value">Posteriore / Integrale</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-label-group">🏋️ <span>Omologazione</span></div>
-                    <div class="spec-value">FIA Track Ready</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-label-group">🌱 <span>Carburante</span></div>
-                    <div class="spec-value">Sostenibile / Performance</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel-box">
             <h2 class="panel-title">Storia</h2>
-            <p class="story-text">{{ auto.descrizione }}</p>
+            <p class="story-text">{{ pure_story }}</p>
+
+            {% if current_user.is_authenticated and current_user.username == 'admin' %}
+            <div class="admin-edit-panel">
+                <h4 style="color: #e50914; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Modifica Storia (Solo Admin)</h4>
+                <form action="{{ url_for('aggiorna_caratteristiche', id=auto.id) }}" method="POST">
+                    <input type="hidden" name="tipo" value="N/D">
+                    <input type="hidden" name="motore" value="N/D">
+                    <input type="hidden" name="potenza" value="N/D">
+                    <input type="hidden" name="trazione" value="N/D">
+                    <input type="hidden" name="cambio" value="N/D">
+                    <input type="hidden" name="peso" value="N/D">
+                    <input type="hidden" name="omologazione" value="N/D">
+                    
+                    <div style="margin-bottom: 15px;">
+                        <textarea name="storia" class="admin-input" rows="6" style="resize: vertical;">{{ pure_story.strip() }}</textarea>
+                    </div>
+                    <button type="submit" style="background: #e50914; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; width: 100%;">Salva Storia</button>
+                </form>
+            </div>
+            {% endif %}
         </div>
     </div>
 
