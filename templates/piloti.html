@@ -12,7 +12,6 @@
         background-position: 0 0, 0 4px, 4px -4px, -4px 0 !important;
     }
 
-    /* --- CARD INTERAMENTE CLICCABILE --- */
     .driver-card-link {
         text-decoration: none !important;
         color: inherit !important;
@@ -29,15 +28,15 @@
         position: relative;
         height: 100%;
         box-shadow: 0 10px 30px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.1);
-        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
-                    border-color 0.35s ease, 
-                    box-shadow 0.35s ease;
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                    border-color 0.3s ease, 
+                    box-shadow 0.3s ease;
     }
     
     .driver-card-link:hover .driver-card {
         border-color: #e50914 !important;
         transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.25);
+        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.25), 0 0 15px rgba(229, 9, 20, 0.2);
     }
 
     .img-container {
@@ -48,6 +47,7 @@
         border-radius: 18px;
         border: 2px solid #2a2a2a;
         position: relative;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         transition: border-color 0.3s ease;
     }
     .driver-card-link:hover .img-container {
@@ -66,8 +66,8 @@
     }
 
     .card-title {
-        margin: 0 0 15px 0;
-        font-size: 26px;
+        margin: 0 0 10px 0;
+        font-size: 24px;
         color: #fff;
         font-weight: 800;
         text-transform: uppercase;
@@ -76,19 +76,17 @@
     }
     .driver-card-link:hover .card-title {
         color: #ffffff;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
         transform: translateX(4px);
     }
 
-    .card-divider {
-        border: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent 0%, #333 50%, transparent 100%);
-        margin: 18px 0;
-        transition: background 0.3s ease;
+    .card-titles-count {
+        color: #ff333a;
+        font-weight: bold;
+        transition: all 0.3s ease;
     }
-    .driver-card-link:hover .card-divider {
-        background: linear-gradient(90deg, transparent 0%, #e50914 50%, transparent 100%);
+    .driver-card-link:hover .card-titles-count {
+        text-shadow: 0 0 8px rgba(255, 51, 58, 0.6);
     }
 
     .delete-btn {
@@ -121,9 +119,9 @@
 
 <div class="container mt-4" style="font-family: 'Arial Black', sans-serif; color: #fff;">
     <h2 style="color: #fff; text-transform: uppercase; font-style: italic; font-weight: 900; letter-spacing: -1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-bottom: 5px;">
-        <span style="color: #e50914;">🏆</span> I Piloti Leggendari
+        <span style="color: #e50914;">🏆</span> Piloti Legendari
     </h2>
-    <p style="color: #888; font-family: sans-serif; font-size: 14px; margin-bottom: 30px;">Gli eroi che hanno scritto la storia del motorsport mondiale.</p>
+    <p style="color: #888; font-family: sans-serif; font-size: 14px; margin-bottom: 40px;">Esplora la storia dei campioni che hanno scritto le pagine più gloriose del motorsport.</p>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 30px; font-family: sans-serif;">
         {% for pilota in piloti %}
@@ -139,23 +137,20 @@
                         <img src="{{ pilota.immagine }}" alt="{{ pilota.nome }}" class="driver-card-img">
                     </div>
 
-                    <div style="padding: 24px 20px 20px 20px; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div style="padding: 24px 20px 24px 20px; display: flex; flex-direction: column; flex-grow: 1;">
                         <div style="margin-bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap;">
                             <span style="background: #e50914; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ pilota.scuderia or 'Svincolato' }}</span>
-                            <span style="background: #2b2b2b; border: 1px solid #444; font-size: 10px; font-weight: bold; padding: 3px 9px; border-radius: 4px; color: #aaa;">🏆 Titoli: {{ pilota.titoli }}</span>
                         </div>
 
-                        <h3 class="card-title">{{ pilota.nome }}</h3>
+                        <h3 class="card-title" style="margin-bottom: 15px;">{{ pilota.nome }}</h3>
                         
-                        <hr class="card-divider">
-                        
-                        <p style="margin: 0; font-size: 14px; color: #bbb; line-height: 1.6; text-align: justify; white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">{{ pilota.biografia }}</p>
+                        <p style="margin: 0; font-size: 14px; color: #888;"><strong>Titoli Mondiali:</strong> <span class="card-titles-count">{{ pilota.titoli }}</span></p>
                     </div>
                 </div>
             </a>
         </div>
         {% else %}
-        <p style="font-style: italic; color: #666; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Nessun pilota inserito nel database.</p>
+        <p style="font-style: italic; color: #666; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Nessun pilota inserito nella Hall of Fame.</p>
         {% endfor %}
     </div>
 </div>
