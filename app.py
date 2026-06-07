@@ -138,12 +138,14 @@ def aggiungi_auto():
         immagine_url = request.form.get('immagine_url')
         if not immagine_url:
             immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
+        storia_iniziale = request.form.get('descrizione', '')
+        descrizione_strutturata = f"{storia_iniziale}\n===TECH_DATA===\nmotore:N/D\npotenza:N/D\npeso:N/D\nvelocita:N/D\naccelerazione:N/D"
         nuova = Auto(
             modello=request.form.get('modello'),
             costruttore=request.form.get('costruttore'),
             anno=int(request.form.get('anno', 2026)),
             categoria=request.form.get('categoria'),
-            descrizione=request.form.get('descrizione'),
+            descrizione=descrizione_strutturata,
             immagine=immagine_url
         )
         db.session.add(nuova)
