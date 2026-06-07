@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    body {
+        background-color: #0b0b0b !important;
+        background-image: 
+            linear-gradient(45deg, #111 25%, transparent 25%), 
+            linear-gradient(-45deg, #111 25%, transparent 25%), 
+            linear-gradient(45deg, transparent 75%, #111 75%), 
+            linear-gradient(-45deg, transparent 75%, #111 75%) !important;
+        background-size: 8px 8px !important;
+        background-position: 0 0, 0 4px, 4px -4px, -4px 0 !important;
+    }
+
+    .detail-container {
+        max-width: 1100px;
+        margin: 50px auto;
+        padding: 0 20px;
+        font-family: sans-serif;
+    }
+
+    .back-btn {
+        background: linear-gradient(180deg, #444 0%, #292929 100%);
+        color: #ddd !important;
+        border: 1px solid #555;
+        border-radius: 20px;
+        padding: 8px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        transition: all 0.25s ease;
+        margin-bottom: 25px;
+    }
+
+    .back-btn:hover {
+        background: linear-gradient(180deg, #555 0%, #333 100%);
+        color: #fff !important;
+        border-color: #888;
+        transform: translateX(-3px);
+    }
+
+    .detail-wrapper {
+        background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
+        border-radius: 24px;
+        border: 2px solid #3a3a3a;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.1);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 25px;
+    }
+
+    @media (max-width: 768px) {
+        .detail-wrapper {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .detail-img-container {
+        border-radius: 18px;
+        border: 2px solid #2a2a2a;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        height: 100%;
+        min-height: 350px;
+    }
+
+    .detail-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .detail-title {
+        font-family: 'Arial Black', sans-serif;
+        font-size: 36px;
+        font-weight: 900;
+        text-transform: uppercase;
+        font-style: italic;
+        color: #fff;
+        margin-top: 0;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+        text-shadow: 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    .tech-badge {
+        background: #e50914;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 5px 12px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .info-box {
+        background: rgba(0,0,0,0.4);
+        border: 1px solid #222;
+        padding: 15px;
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #222;
+        font-size: 15px;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #888;
+        font-weight: bold;
+    }
+
+    .info-value {
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .description-text {
+        color: #ccc;
+        line-height: 1.7;
+        font-size: 15px;
+        margin-top: 20px;
+        text-align: justify;
+        white-space: pre-wrap;
+    }
+</style>
+
+<div class="detail-container">
+    <a href="{{ url_for('piloti') }}" class="back-btn">⬅️ Torna alla Lista</a>
+
+    <div class="detail-wrapper">
+        <div class="detail-img-container">
+            <img src="{{ pilota.immagine }}" alt="{{ pilota.nome }}" class="detail-img">
+        </div>
+
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            <div style="margin-bottom: 15px;">
+                <span class="tech-badge">{{ pilota.scuderia or 'Svincolato' }}</span>
+            </div>
+
+            <h1 class="detail-title">{{ pilota.nome }}</h1>
+
+            <div class="info-box">
+                <div class="info-row">
+                    <span class="info-label">Scuderia Storica / Attuale:</span>
+                    <span class="info-value" style="color: #e50914;">{{ pilota.scuderia or 'Svincolato' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Mondiali Vinti:</span>
+                    <span class="info-value" style="color: #ff333a; font-size: 16px;">🏆 {{ pilota.titoli }}</span>
+                </div>
+            </div>
+
+            <h3 style="color: #fff; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 25px; margin-bottom: 10px; border-left: 3px solid #e50914; padding-left: 8px;">Biografia & Carriera</h3>
+            <p class="description-text">{{ pilota.biografia }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

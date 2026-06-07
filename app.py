@@ -32,7 +32,7 @@ class Pilota(db.Model):
     scuderia = db.Column(db.String(100))
     titoli = db.Column(db.Integer, default=0)
     biografia = db.Column(db.Text)
-    immagine = db.Column(db.String(500), default='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7') # URL di fallback di esempio
+    immagine = db.Column(db.String(500), default='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7')
 
 class Auto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +41,7 @@ class Auto(db.Model):
     anno = db.Column(db.Integer)
     categoria = db.Column(db.String(50), default='Formula 1')
     descrizione = db.Column(db.Text)
-    immagine = db.Column(db.String(500), default='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7') # URL di fallback di esempio
+    immagine = db.Column(db.String(500), default='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -58,6 +58,12 @@ def index():
 def piloti():
     return render_template('piloti.html', piloti=Pilota.query.all())
 
+# Nuova rotta per il dettaglio del singolo pilota
+@app.route('/piloti/<int:id>')
+def dettaglio_pilota(id):
+    pilota_selezionato = Pilota.query.get_or_404(id)
+    return render_template('dettaglio_pilota.html', pilota=pilota_selezionato)
+
 @app.route('/auto')
 def auto():
     categoria_selezionata = request.args.get('categoria')
@@ -66,6 +72,12 @@ def auto():
     else:
         tutte_le_auto = Auto.query.all()
     return render_template('auto.html', auto=tutte_le_auto, categoria_attiva=categoria_selezionata)
+
+# Nuova rotta per il dettaglio della singola auto
+@app.route('/auto/<int:id>')
+def dettaglio_auto(id):
+    vettura_selezionata = Auto.query.get_or_404(id)
+    return render_template('dettaglio_auto.html', auto=vettura_selezionata)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -92,7 +104,6 @@ def aggiungi_pilota():
     if current_user.username != 'admin':
         abort(403)
     if request.method == 'POST':
-        # Prendiamo direttamente l'URL dal campo di testo del form HTML
         immagine_url = request.form.get('immagine_url')
         if not immagine_url:
             immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
@@ -115,7 +126,6 @@ def aggiungi_auto():
     if current_user.username != 'admin':
         abort(403)
     if request.method == 'POST':
-        # Prendiamo direttamente l'URL dal campo di testo del form HTML
         immagine_url = request.form.get('immagine_url')
         if not immagine_url:
             immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
@@ -148,7 +158,7 @@ def elimina_pilota(id):
 def elimina_auto(id):
     if current_user.username != 'admin':
         abort(403)
-    vettura = Auto.query.get_or_404(id)
+    vettura = Auto.queary.get_or_404(id)
     db.session.delete(vettura)
     db.session.commit()
     return redirect(url_for('auto'))

@@ -1,45 +1,222 @@
 {% extends 'base.html' %}
 {% block content %}
-<div style="max-width: 600px; margin: 40px auto; padding: 30px; background: #1a1a1a; border-radius: 8px; border-top: 4px solid #e50914; color: #fff; font-family: sans-serif;">
-    <h2 style="color: #e50914; margin-bottom: 20px; text-transform: uppercase;">Aggiungi Nuova Vettura</h2>
-    
-    <form method="POST" action="{{ url_for('aggiungi_auto') }}">
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Modello Auto *</label>
-            <input type="text" name="modello" required style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Costruttore / Marca</label>
-            <input type="text" name="costruttore" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Anno di Produzione</label>
-            <input type="number" name="anno" value="2026" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
-        </div>
+<style>
+    body {
+        background-color: #0b0b0b !important;
+        background-image: 
+            linear-gradient(45deg, #111 25%, transparent 25%), 
+            linear-gradient(-45deg, #111 25%, transparent 25%), 
+            linear-gradient(45deg, transparent 75%, #111 75%), 
+            linear-gradient(-45deg, transparent 75%, #111 75%) !important;
+        background-size: 8px 8px !important;
+        background-position: 0 0, 0 4px, 4px -4px, -4px 0 !important;
+    }
 
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoria Competizione</label>
-            <select name="categoria" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
-                <option value="Formula 1">Formula 1</option>
-                <option value="Rally">Rally</option>
-                <option value="Supercar">Supercar</option>
-                <option value="Endurance">Endurance</option>
-            </select>
+    .filter-container {
+        background: linear-gradient(180deg, #222 0%, #151515 100%);
+        padding: 12px 20px;
+        border-radius: 30px;
+        border: 2px solid #444;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.5);
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        background: linear-gradient(180deg, #444 0%, #292929 100%) !important;
+        color: #ddd !important;
+        border: 1px solid #555 !important;
+        border-radius: 20px !important;
+        padding: 6px 18px !important;
+        font-weight: bold !important;
+        text-transform: uppercase;
+        font-size: 13px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        transition: all 0.25s ease;
+    }
+
+    .filter-btn:hover {
+        background: linear-gradient(180deg, #555 0%, #333 100%) !important;
+        color: #fff !important;
+        border-color: #888 !important;
+        transform: translateY(-1px);
+    }
+
+    .filter-btn.active {
+        background: linear-gradient(180deg, #e50914 0%, #990005 100%) !important;
+        color: #fff !important;
+        border-color: #ff333a !important;
+        box-shadow: 0 0 12px rgba(229, 9, 20, 0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+    }
+
+    /* --- CARD INTERAMENTE CLICCABILE --- */
+    .motor-card-link {
+        text-decoration: none !important; /* Rimuove la sottolineatura dei testi */
+        color: inherit !important;       /* Mantiene i colori originali dei testi */
+        display: block;                  /* Fa sì che l'intero blocco sia un link */
+    }
+
+    .motor-card {
+        background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
+        border-radius: 24px;
+        overflow: hidden;
+        border: 2px solid #3a3a3a;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        height: 100%; /* Forza le card ad avere la stessa altezza nella griglia */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.1);
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                    border-color 0.3s ease, 
+                    box-shadow 0.3s ease;
+    }
+    
+    .motor-card-link:hover .motor-card {
+        border-color: #e50914 !important;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.25), 0 0 15px rgba(229, 9, 20, 0.2);
+    }
+
+    .img-container {
+        width: calc(100% - 24px);
+        height: 210px;
+        margin: 12px auto 0 auto;
+        overflow: hidden;
+        border-radius: 18px;
+        border: 2px solid #2a2a2a;
+        position: relative;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        transition: border-color 0.3s ease;
+    }
+    .motor-card-link:hover .img-container {
+        border-color: rgba(229, 9, 20, 0.5);
+    }
+
+    .motor-card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+    .motor-card-link:hover .motor-card-img {
+        transform: scale(1.06);
+    }
+
+    .card-title {
+        margin: 0 0 10px 0;
+        font-size: 26px;
+        color: #fff;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
+        transition: all 0.3s ease;
+    }
+    .motor-card-link:hover .card-title {
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+        transform: translateX(4px);
+    }
+
+    .card-year {
+        color: #ff333a;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .motor-card-link:hover .card-year {
+        text-shadow: 0 0 8px rgba(255, 51, 58, 0.6);
+    }
+
+    .card-divider {
+        border: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #333 50%, transparent 100%);
+        margin: 18px 0;
+        transition: background 0.3s ease;
+    }
+    .motor-card-link:hover .card-divider {
+        background: linear-gradient(90deg, transparent 0%, #e50914 50%, transparent 100%);
+    }
+
+    /* Il tasto elimina rimane sopra e non subisce il click del link principale */
+    .delete-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(180deg, #333 0%, #1a1a1a 100%);
+        color: #ff333a;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid #555;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+        z-index: 20; /* Più alto della card */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        transition: all 0.2s ease;
+    }
+    .delete-btn:hover {
+        background: #ff333a;
+        color: #fff;
+        border-color: #ff666b;
+        box-shadow: 0 0 10px rgba(255, 51, 58, 0.6);
+    }
+</style>
+
+<div class="container mt-4" style="font-family: 'Arial Black', sans-serif; color: #fff;">
+    <h2 style="color: #fff; text-transform: uppercase; font-style: italic; font-weight: 900; letter-spacing: -1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-bottom: 5px;">
+        <span style="color: #e50914;">🏎️</span> Il Garage delle Auto Iconiche
+    </h2>
+    <p style="color: #888; font-family: sans-serif; font-size: 14px; margin-bottom: 30px;">Scopri le specifiche tecniche delle vetture più straordinarie di sempre.</p>
+
+    <div class="filter-container" style="font-family: sans-serif;">
+        <span style="font-weight: bold; color: #aaa; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Filtra per Categoria:</span>
+        <a href="{{ url_for('auto') }}" class="btn filter-btn {{ 'active' if not categoria_attiva else '' }}">Tutte</a>
+        <a href="{{ url_for('auto', categoria='Formula 1') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Formula 1' else '' }}">Formula 1</a>
+        <a href="{{ url_for('auto', categoria='Rally') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Rally' else '' }}">Rally</a>
+        <a href="{{ url_for('auto', categoria='Supercar') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Supercar' else '' }}">Supercar</a>
+        <a href="{{ url_for('auto', categoria='Endurance') }}" class="btn filter-btn {{ 'active' if categoria_attiva == 'Endurance' else '' }}">Endurance</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 30px; font-family: sans-serif;">
+        {% for vettura in auto %}
+        <div style="position: relative;"> {% if current_user.is_authenticated and current_user.username == 'admin' %}
+            <a href="{{ url_for('elimina_auto', id=vettura.id) }}" onclick="return confirm('Vuoi davvero eliminare questa vettura?');" class="delete-btn">&times;</a>
+            {% endif %}
+
+            <a href="{{ url_for('dettaglio_auto', id=vettura.id) }}" class="motor-card-link">
+                <div class="motor-card">
+                    <div class="img-container">
+                        <img src="{{ vettura.immagine }}" alt="{{ vettura.modello }}" class="motor-card-img">
+                    </div>
+
+                    <div style="padding: 24px 20px 20px 20px; display: flex; flex-direction: column; flex-grow: 1;">
+                        <div style="margin-bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap;">
+                            <span style="background: #e50914; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ vettura.costruttore or 'N/D' }}</span>
+                            <span style="background: #2b2b2b; border: 1px solid #444; font-size: 10px; font-weight: bold; padding: 3px 9px; border-radius: 4px; color: #aaa;">{{ vettura.categoria }}</span>
+                        </div>
+
+                        <h3 class="card-title">{{ vettura.modello }}</h3>
+                        
+                        <p style="margin: 0; font-size: 14px; color: #888;"><strong>Anno:</strong> <span class="card-year">{{ vettura.anno }}</span></p>
+                        
+                        <hr class="card-divider">
+                        
+                        <p style="margin: 0; font-size: 14px; color: #bbb; line-height: 1.6; text-align: justify; white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">{{ vettura.descrizione }}</p>
+                    </div>
+                </div>
+            </a>
         </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Incolla Link Immagine da Internet (URL)</label>
-            <input type="url" name="immagine_url" placeholder="https://esempio.com/immagine-auto.jpg" required style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px;">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Descrizione / Scheda Tecnica</label>
-            <textarea name="descrizione" rows="5" style="width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; resize: vertical;"></textarea>
-        </div>
-        
-        <button type="submit" style="background: #e50914; color: #fff; border: none; padding: 12px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; width: 100%;">Salva Vettura</button>
-    </form>
+        {% else %}
+        <p style="font-style: italic; color: #666; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Nessuna vettura presente nel garage.</p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
