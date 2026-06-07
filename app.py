@@ -6,12 +6,9 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SUPER_CLEAN_KEY_2026_FINAL'
 
-# --- CONFIGURAZIONE DATABASE DINAMICA PER VERCEL ---
 if os.environ.get('POSTGRES_URL'):
-    # Se siamo online su Vercel, usa Postgres e correggi il prefisso del protocollo per SQLAlchemy
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL').replace("postgres://", "postgresql://", 1)
 else:
-    # Se sei sul tuo computer in locale, continua a usare SQLite
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///motorsport.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -20,7 +17,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# --- MODELLI DEL DATABASE ---
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -49,7 +45,6 @@ def load_user(user_id):
         return User(id=9999, username='admin')
     return User.query.get(int(user_id))
 
-# --- ROTTE DELL'APPLICAZIONE ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -58,7 +53,6 @@ def index():
 def piloti():
     return render_template('piloti.html', piloti=Pilota.query.all())
 
-# Nuova rotta per il dettaglio del singolo pilota
 @app.route('/piloti/<int:id>')
 def dettaglio_pilota(id):
     pilota_selezionato = Pilota.query.get_or_404(id)
@@ -73,11 +67,27 @@ def auto():
         tutte_le_auto = Auto.query.all()
     return render_template('auto.html', auto=tutte_le_auto, categoria_attiva=categoria_selezionata)
 
-# Nuova rotta per il dettaglio della singola auto
 @app.route('/auto/<int:id>')
 def dettaglio_auto(id):
     vettura_selezionata = Auto.query.get_or_404(id)
     return render_template('dettaglio_auto.html', auto=vettura_selezionata)
+
+@app.route('/auto/aggiorna_caratteristiche/<int:id>', methods=['POST'])
+@login_required
+def aggiorna_caratteristiche(id):
+    if current_user.username != 'admin':
+        abort(403)
+    vettura = Auto.query.get_or_404(id)
+    motore = request.form.get('motore', 'N/D')
+    potenza = request.form.get('potenza', 'N/D')
+    peso = request.form.get('peso', 'N/D')
+    velocita = request.form.get('velocita', 'N/D')
+    accelerazione = request.form.get('accelerazione', 'N/D')
+    storia = request.form.get('storia', '')
+    nuova_descrizione = f"{storia}\n===TECH_DATA===\nmotore:{motore}\npotenza:{potenza}\npeso:{peso}\nvelocita:{velocita}\naccelerazione:{accelerazione}"
+    vettura.descrizione = nuova_descrizione
+    db.session.commit()
+    return redirect(url_for('dettaglio_auto', id=id))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -107,7 +117,6 @@ def aggiungi_pilota():
         immagine_url = request.form.get('immagine_url')
         if not immagine_url:
             immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
-
         nuovo = Pilota(
             nome=request.form.get('nome'),
             scuderia=request.form.get('scuderia'),
@@ -129,7 +138,6 @@ def aggiungi_auto():
         immagine_url = request.form.get('immagine_url')
         if not immagine_url:
             immagine_url = 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7'
-
         nuova = Auto(
             modello=request.form.get('modello'),
             costruttore=request.form.get('costruttore'),
@@ -158,12 +166,11 @@ def elimina_pilota(id):
 def elimina_auto(id):
     if current_user.username != 'admin':
         abort(403)
-    vettura = Auto.queary.get_or_404(id)
+    vettura = Auto.query.get_or_404(id)
     db.session.delete(vettura)
     db.session.commit()
     return redirect(url_for('auto'))
 
-# --- CREAZIONE TABELLE AUTOMATICA ALL'AVVIO ---
 with app.app_context():
     db.create_all()
 

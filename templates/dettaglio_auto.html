@@ -213,12 +213,22 @@
         border: 1px solid #2a2a2a;
         border-radius: 16px;
         padding: 20px;
-        display: flex;
-        justify-content: space-around;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
         align-items: center;
-        flex-wrap: wrap;
         gap: 20px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 900px) {
+        .footer-stats-banner {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 550px) {
+        .footer-stats-banner {
+            grid-template-columns: 1fr;
+        }
     }
 
     .stat-item {
@@ -238,6 +248,7 @@
         justify-content: center;
         color: #e50914;
         font-size: 18px;
+        flex-shrink: 0;
     }
 
     .stat-info {
@@ -246,9 +257,10 @@
     }
 
     .stat-number {
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 800;
         color: #fff;
+        text-transform: uppercase;
     }
 
     .stat-desc {
@@ -260,10 +272,24 @@
     }
 </style>
 
+{% set ns = namespace(motore='N/D', potenza='N/D', peso='N/D', velocita='N/D', accelerazione='N/D') %}
 {% set pure_story = auto.descrizione %}
+
 {% if "===TECH_DATA===" in auto.descrizione %}
     {% set parts = auto.descrizione.split("===TECH_DATA===") %}
     {% set pure_story = parts[0] %}
+    {% for line in parts[1].split("\n") %}
+        {% if ":" in line %}
+            {% set pair = line.split(":") %}
+            {% set key = pair[0].strip().lower() %}
+            {% set val = pair[1].strip() %}
+            {% if key == 'motore' %}{% set ns.motore = val %}{% endif %}
+            {% if key == 'potenza' %}{% set ns.potenza = val %}{% endif %}
+            {% if key == 'peso' %}{% set ns.peso = val %}{% endif %}
+            {% if key == 'velocita' %}{% set ns.velocita = val %}{% endif %}
+            {% if key == 'accelerazione' %}{% set ns.accelerazione = val %}{% endif %}
+        {% endif %}
+    {% endfor %}
 {% endif %}
 
 <div class="detail-container">
@@ -307,20 +333,37 @@
 
             {% if current_user.is_authenticated and current_user.username == 'admin' %}
             <div class="admin-edit-panel">
-                <h4 style="color: #e50914; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Modifica Storia (Solo Admin)</h4>
+                <h4 style="color: #e50914; font-size: 12px; text-transform: uppercase; margin-bottom: 12px;">Modifica Caratteristiche Banner & Storia (Solo Admin)</h4>
                 <form action="{{ url_for('aggiorna_caratteristiche', id=auto.id) }}" method="POST">
-                    <input type="hidden" name="tipo" value="N/D">
-                    <input type="hidden" name="motore" value="N/D">
-                    <input type="hidden" name="potenza" value="N/D">
-                    <input type="hidden" name="trazione" value="N/D">
-                    <input type="hidden" name="cambio" value="N/D">
-                    <input type="hidden" name="peso" value="N/D">
-                    <input type="hidden" name="omologazione" value="N/D">
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                        <div>
+                            <label style="font-size: 11px; color:#aaa; font-weight: bold;">⚙️ Motore:</label>
+                            <input type="text" name="motore" value="{{ ns.motore }}" class="admin-input">
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; color:#aaa; font-weight: bold;">⚡ Potenza:</label>
+                            <input type="text" name="potenza" value="{{ ns.potenza }}" class="admin-input">
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; color:#aaa; font-weight: bold;">⚖️ Peso:</label>
+                            <input type="text" name="peso" value="{{ ns.peso }}" class="admin-input">
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; color:#aaa; font-weight: bold;">⏱️ Velocità Massima:</label>
+                            <input type="text" name="velocita" value="{{ ns.velocita }}" class="admin-input">
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; color:#aaa; font-weight: bold;">🚀 Accelerazione (0-100):</label>
+                            <input type="text" name="accelerazione" value="{{ ns.accelerazione }}" class="admin-input">
+                        </div>
+                    </div>
                     
                     <div style="margin-bottom: 15px;">
-                        <textarea name="storia" class="admin-input" rows="6" style="resize: vertical;">{{ pure_story.strip() }}</textarea>
+                        <label style="font-size: 11px; color:#aaa; font-weight: bold;">Testo Storia:</label>
+                        <textarea name="storia" class="admin-input" rows="5" style="resize: vertical;">{{ pure_story.strip() }}</textarea>
                     </div>
-                    <button type="submit" style="background: #e50914; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; width: 100%;">Salva Storia</button>
+                    <button type="submit" style="background: #e50914; color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; width: 100%; text-transform: uppercase; letter-spacing: 0.5px;">Salva Dati e Storia</button>
                 </form>
             </div>
             {% endif %}
@@ -329,31 +372,38 @@
 
     <div class="footer-stats-banner">
         <div class="stat-item">
-            <div class="stat-icon-circle">⏱️</div>
+            <div class="stat-icon-circle">⚙️</div>
             <div class="stat-info">
-                <span class="stat-number">TRACK</span>
-                <span class="stat-desc">Assetto</span>
-            </div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-icon-circle">⚖️</div>
-            <div class="stat-info">
-                <span class="stat-number">~1000 KG</span>
-                <span class="stat-desc">Peso Stimato</span>
+                <span class="stat-number">{{ ns.motore }}</span>
+                <span class="stat-desc">Motore</span>
             </div>
         </div>
         <div class="stat-item">
             <div class="stat-icon-circle">⚡</div>
             <div class="stat-info">
-                <span class="stat-number">HYBRID / GAS</span>
-                <span class="stat-desc">Tecnologia</span>
+                <span class="stat-number">{{ ns.potenza }}</span>
+                <span class="stat-desc">Potenza</span>
             </div>
         </div>
         <div class="stat-item">
-            <div class="stat-icon-circle">🏆</div>
+            <div class="stat-icon-circle">⚖️</div>
             <div class="stat-info">
-                <span class="stat-number">ICONIC</span>
-                <span class="stat-desc">Status</span>
+                <span class="stat-number">{{ ns.peso }}</span>
+                <span class="stat-desc">Peso</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon-circle">⏱️</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ ns.velocita }}</span>
+                <span class="stat-desc">Velocità Max</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon-circle">🚀</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ ns.accelerazione }}</span>
+                <span class="stat-desc">Accel. 0-100</span>
             </div>
         </div>
     </div>
