@@ -1,31 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
+    /* --- SCONDO FIBRA DI CARBONIO --- */
+    body {
+        background-color: #0b0b0b !important;
+        background-image: 
+            linear-gradient(45deg, #111 25%, transparent 25%), 
+            linear-gradient(-45deg, #111 25%, transparent 25%), 
+            linear-gradient(45deg, transparent 75%, #111 75%), 
+            linear-gradient(-45deg, transparent 75%, #111 75%) !important;
+        background-size: 8px 8px !important;
+        background-position: 0 0, 0 4px, 4px -4px, -4px 0 !important;
+    }
+
+    /* --- CARD PILOTI FUTURISTICA --- */
     .driver-card {
-        background: #1a1a1a;
-        border-radius: 12px;
+        background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
+        border-radius: 24px;
         overflow: hidden;
-        border: 1px solid #2a2a2a;
+        border: 2px solid #3a3a3a;
         display: flex;
         flex-direction: column;
         position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.1);
         transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
-                    background-color 0.35s ease, 
                     border-color 0.35s ease, 
                     box-shadow 0.35s ease;
     }
     
     .driver-card:hover {
-        background-color: #242424;
         border-color: #e50914 !important;
-        transform: translateY(-6px);
-        box-shadow: 0 12px 25px rgba(229, 9, 20, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.25);
     }
 
     .img-container {
-        width: 100%;
-        height: 240px;
+        width: calc(100 ready - 24px);
+        width: calc(100% - 24px);
+        height: 250px;
+        margin: 12px auto 0 auto;
         overflow: hidden;
+        border-radius: 18px;
+        border: 2px solid #2a2a2a;
+        position: relative;
+        transition: border-color 0.3s ease;
+    }
+    .driver-card:hover .img-container {
+        border-color: rgba(229, 9, 20, 0.5);
     }
 
     .driver-card-img {
@@ -33,70 +54,101 @@
         height: 100%;
         object-fit: cover;
         display: block;
-        transition: transform 0.4s ease;
+        transition: transform 0.5s ease;
     }
     .driver-card:hover .driver-card-img {
-        transform: scale(1.08);
+        transform: scale(1.06);
     }
 
+    /* Titolo Neon Bianco */
     .card-title {
         margin: 0 0 15px 0;
-        font-size: 24px;
+        font-size: 26px;
         color: #fff;
-        font-weight: bold;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
         transition: all 0.3s ease;
     }
     .driver-card:hover .card-title {
         color: #ffffff;
-        font-style: italic;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.5);
-        transform: translateX(5px);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+        transform: translateX(4px);
     }
 
+    /* Linea Tech */
     .card-divider {
         border: 0;
-        height: 1px;
-        background: #333;
-        margin: 15px 0;
-        transition: background 0.3s ease, box-shadow 0.3s ease;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #333 50%, transparent 100%);
+        margin: 18px 0;
+        transition: background 0.3s ease;
     }
     .driver-card:hover .card-divider {
-        background: #e50914;
-        box-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
+        background: linear-gradient(90deg, transparent 0%, #e50914 50%, transparent 100%);
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(180deg, #333 0%, #1a1a1a 100%);
+        color: #ff333a;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid #555;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+        z-index: 10;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        transition: all 0.2s ease;
+    }
+    .delete-btn:hover {
+        background: #ff333a;
+        color: #fff;
+        border-color: #ff666b;
+        box-shadow: 0 0 10px rgba(255, 51, 58, 0.6);
     }
 </style>
 
-<div class="container mt-4" style="font-family: sans-serif; color: #fff;">
-    <h2 style="color: #e50914; text-transform: uppercase; margin-bottom: 5px;">🏆 I Piloti Leggendari</h2>
-    <p style="color: #aaa; margin-bottom: 30px;">Gli eroi che hanno scritto la storia del motorsport mondiale.</p>
+<div class="container mt-4" style="font-family: 'Arial Black', sans-serif; color: #fff;">
+    <h2 style="color: #fff; text-transform: uppercase; font-style: italic; font-weight: 900; letter-spacing: -1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-bottom: 5px;">
+        <span style="color: #e50914;">🏆</span> I Piloti Leggendari
+    </h2>
+    <p style="color: #888; font-family: sans-serif; font-size: 14px; margin-bottom: 30px;">Gli eroi che hanno scritto la storia del motorsport mondiale.</p>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 30px; font-family: sans-serif;">
         {% for pilota in piloti %}
         <div class="driver-card">
             
             {% if current_user.is_authenticated and current_user.username == 'admin' %}
-            <a href="{{ url_for('elimina_pilota', id=pilota.id) }}" onclick="return confirm('Vuoi davvero eliminare questo pilota?');" style="position: absolute; top: 10px; right: 10px; background: rgba(229, 9, 20, 0.8); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; z-index: 10;">&times;</a>
+            <a href="{{ url_for('elimina_pilota', id=pilota.id) }}" onclick="return confirm('Vuoi davvero eliminare questo pilota?');" class="delete-btn">&times;</a>
             {% endif %}
 
             <div class="img-container">
                 <img src="{{ pilota.immagine }}" alt="{{ pilota.nome }}" class="driver-card-img">
             </div>
 
-            <div style="padding: 20px; display: flex; flex-direction: column; flex-grow: 1;">
-                <div style="margin-bottom: 15px; display: flex; gap: 5px; flex-wrap: wrap;">
-                    <span style="background: #e50914; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 3px; text-transform: uppercase;">{{ pilota.scuderia or 'Svincolato' }}</span>
-                    <span style="background: #444; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 3px;">🏆 Titoli: {{ pilota.titoli }}</span>
+            <div style="padding: 24px 20px 20px 20px; display: flex; flex-direction: column; flex-grow: 1;">
+                <div style="margin-bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap;">
+                    <span style="background: #e50914; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ pilota.scuderia or 'Svincolato' }}</span>
+                    <span style="background: #2b2b2b; border: 1px solid #444; font-size: 10px; font-weight: bold; padding: 3px 9px; border-radius: 4px; color: #aaa;">🏆 Titoli: {{ pilota.titoli }}</span>
                 </div>
 
                 <h3 class="card-title">{{ pilota.nome }}</h3>
                 
                 <hr class="card-divider">
                 
-                <p style="margin: 0; font-size: 14px; color: #ccc; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">{{ pilota.biografia }}</p>
+                <p style="margin: 0; font-size: 14px; color: #bbb; line-height: 1.6; text-align: justify; white-space: pre-wrap; word-wrap: break-word; word-break: break-word;">{{ pilota.biografia }}</p>
             </div>
         </div>
         {% else %}
-        <p style="font-style: italic; color: #aaa; grid-column: 1 / -1;">Nessun pilota inserito nel database.</p>
+        <p style="font-style: italic; color: #666; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Nessun pilota inserito nel database.</p>
         {% endfor %}
     </div>
 </div>
